@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userControllers.NewMovimentoController">
+   <children>
+      <Label layoutX="28.0" layoutY="75.0" text="Tipo Movimento" />
+      <Label layoutX="167.0" layoutY="14.0" text="Crea Nuovo Movimento">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="typeCB" layoutX="28.0" layoutY="110.0" prefWidth="150.0" />
+      <DatePicker fx:id="execDate" layoutX="411.0" layoutY="104.0" />
+      <Label layoutX="494.0" layoutY="67.0" text="Data Esecuzione:" />
+      <Label layoutX="498.0" layoutY="145.0" text="Data Emissione" />
+      <DatePicker fx:id="emitDate" layoutX="407.0" layoutY="188.0" />
+      <Label layoutX="37.0" layoutY="172.0" text="Causale:" />
+      <TextField fx:id="causal" layoutX="41.0" layoutY="200.0" />
+      <Label fx:id="iban_LBL" layoutX="253.0" layoutY="172.0" text="IBAN Beneficiario:" />
+      <TextField fx:id="iban" layoutX="225.0" layoutY="200.0" />
+      <Label layoutX="538.0" layoutY="217.0" text="Importo:" />
+      <TextField fx:id="amount" layoutX="437.0" layoutY="245.0" />
+      <Button layoutX="200.0" layoutY="290.0" mnemonicParsing="false" onAction="#onRequest" text="Richiedi  Movimento">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <TextField fx:id="operationCostTF" editable="false" layoutX="225.0" layoutY="104.0" />
+      <Label layoutX="257.0" layoutY="76.0" text="Costo dell'operazione" />
+   </children>
+</Pane>

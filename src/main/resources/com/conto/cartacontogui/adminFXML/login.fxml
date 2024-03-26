@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="508.0" prefWidth="423.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="adminControllers.LoginController">
+   <children>
+      <Label alignment="TOP_CENTER" layoutX="104.0" layoutY="75.0" prefHeight="78.0" prefWidth="181.0" text="LOGIN" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font name="Calibri" size="64.0" />
+         </font>
+      </Label>
+      <TextField fx:id="username_TF" layoutX="120.0" layoutY="236.0" promptText="Username" />
+      <PasswordField fx:id="password_TF" layoutX="120.0" layoutY="275.0" promptText="Password" />
+      <Button layoutX="118.0" layoutY="359.0" mnemonicParsing="false" onAction="#onLogin" text="Esegui Login" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button layoutX="140.0" layoutY="431.0" mnemonicParsing="false" onAction="#onBack" text="Indietro">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>

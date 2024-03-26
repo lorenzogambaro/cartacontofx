@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="428.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userControllers.MainPageController">
+   <children>
+      <Label fx:id="saldoLBL" layoutX="496.0" layoutY="35.0" text="Saldo:" />
+      <TableView fx:id="movimentiTABLE" layoutX="194.0" layoutY="75.0" prefHeight="352.0" prefWidth="445.0">
+        <columns>
+          <TableColumn fx:id="movimentiEntrata" prefWidth="212.0" text="Entrata" />
+          <TableColumn fx:id="movimentiUscita" prefWidth="258.0" text="Uscita" />
+        </columns>
+      </TableView>
+      <Button layoutX="40.0" layoutY="162.0" mnemonicParsing="false" onAction="#onNewMovimentoClick" text="Nuovo Moviemento" />
+      <ChoiceBox fx:id="contiSelector" layoutX="26.0" layoutY="88.0" prefWidth="150.0" />
+      <Label fx:id="user_LBL" layoutX="101.0" layoutY="30.0" prefHeight="27.0" prefWidth="22.0">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="58.0" layoutY="283.0" mnemonicParsing="false" onAction="#onModifyDatas" text="Modifica Dati" />
+   </children>
+</Pane>

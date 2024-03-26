@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="427.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminControllers.NuovoContoController">
+   <children>
+      <Label layoutX="189.0" layoutY="26.0" text="Crea Nuovo Conto">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font></Label>
+      <Label layoutX="52.0" layoutY="85.0" text="IBAN del conto:" />
+      <TextField fx:id="iban_TF" editable="false" layoutX="217.0" layoutY="81.0" />
+      <Label layoutX="65.0" layoutY="145.0" text="Intestatari:" />
+      <Button layoutX="250.0" layoutY="362.0" mnemonicParsing="false" onAction="#onAddRequest" text="Aggiungi Conto" />
+      <ListView fx:id="intestatari_LW" layoutX="200.0" layoutY="132.0" prefHeight="200.0" prefWidth="200.0" />
+   </children>
+</Pane>
