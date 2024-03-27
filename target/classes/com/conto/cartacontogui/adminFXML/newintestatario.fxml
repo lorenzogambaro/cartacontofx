@@ -34,7 +34,6 @@
       <Label layoutX="221.0" layoutY="529.0" text="Cellulare:" />
       <Label layoutX="231.0" layoutY="585.0" text="Email:" />
       <Label layoutX="209.0" layoutY="318.0" text="Indirizzo:" />
-      <PasswordField fx:id="password_TF" layoutX="345.0" layoutY="230.0" promptText="Password" />
       <Label layoutX="212.0" layoutY="14.0" text="Nuovo Intestatario">
          <font>
             <Font name="System Bold Italic" size="24.0" />
@@ -49,5 +48,6 @@
       <Label layoutX="232.0" layoutY="634.0" text="Poteri" />
       <Label layoutX="194.0" layoutY="361.0" text="Numero Civico" />
       <TextField fx:id="numeroCivico_TF" layoutX="339.0" layoutY="349.0" promptText="Numero Civico" />
+      <PasswordField fx:id="password_PF" layoutX="339.0" layoutY="227.0" />
    </children>
 </AnchorPane>

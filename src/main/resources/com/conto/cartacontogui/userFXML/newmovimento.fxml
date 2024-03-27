@@ -20,7 +20,7 @@
       <DatePicker fx:id="execDate" layoutX="411.0" layoutY="104.0" />
       <Label layoutX="494.0" layoutY="67.0" text="Data Esecuzione:" />
       <Label layoutX="498.0" layoutY="145.0" text="Data Emissione" />
-      <DatePicker fx:id="emitDate" layoutX="407.0" layoutY="188.0" />
+      <DatePicker fx:id="emitDate" disable="true" editable="false" layoutX="407.0" layoutY="188.0" />
       <Label layoutX="37.0" layoutY="172.0" text="Causale:" />
       <TextField fx:id="causal" layoutX="41.0" layoutY="200.0" />
       <Label fx:id="iban_LBL" layoutX="253.0" layoutY="172.0" text="IBAN Beneficiario:" />
@@ -32,7 +32,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <TextField fx:id="operationCostTF" editable="false" layoutX="225.0" layoutY="104.0" />
+      <TextField fx:id="operationCostTF" disable="true" editable="false" layoutX="225.0" layoutY="104.0" />
       <Label layoutX="257.0" layoutY="76.0" text="Costo dell'operazione" />
    </children>
 </Pane>

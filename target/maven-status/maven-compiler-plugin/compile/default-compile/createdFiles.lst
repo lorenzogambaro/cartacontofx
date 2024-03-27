@@ -27,6 +27,7 @@ com\conto\cartacontogui\Utils.class
 model\Conto.class
 adminControllers\AdminDashboardController.class
 model\Movimento.class
+funcitons\Functions.class
 com\conto\cartacontogui\App.class
 userControllers\NewMovimentoController.class
 model\Iban.class

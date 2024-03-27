@@ -142,5 +142,6 @@ public class Intestatario extends User implements Serializable
         return new StringBuilder(super.getSurname()).append(' ').append(super.getName()).toString();
     }
 
+
 }
 

@@ -16,11 +16,12 @@ public class TipoMovimento implements Serializable
     private static long id = 0;
     private final long code;
     private final String desc;
+    private final int giorniValuta;
     private final double cost;
     private final double amount;
     private final int min_power_requried;
 
-    public TipoMovimento(final long code, final String desc, final double cost, final double amount, final int min_power_required) 
+    public TipoMovimento(final long code, final String desc, final double cost, final double amount, final int giorniValuta, final int min_power_required) 
     {
         this.code = code;
         this.desc = Objects.requireNonNull(desc);
@@ -28,12 +29,13 @@ public class TipoMovimento implements Serializable
         if (amount < -1 || amount > 1)
             throw new IllegalArgumentException("Segno must be -1 for negative, +1 for positive!");
         this.amount = amount;
+        this.giorniValuta = giorniValuta;
         this.min_power_requried = min_power_required;
     }
     
-    public TipoMovimento(final String desc, final double cost, final double amount, final int min_power_required)
+    public TipoMovimento(final String desc, final double cost, final double amount, final int giorniValuta, final int min_power_required)
     {
-        this(id++, desc, cost, amount, min_power_required);
+        this(id++, desc, cost, amount, giorniValuta, min_power_required);
     }
 
     public long getCode() 
@@ -60,6 +62,10 @@ public class TipoMovimento implements Serializable
         return min_power_requried;
     }
 
+    public int getGiorniValuta() {
+        return giorniValuta;
+    }
+    
     
     @Override
     public String toString() {

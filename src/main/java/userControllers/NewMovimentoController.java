@@ -12,17 +12,17 @@ import model.TipoMovimento;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import API.ApiConnection;
+import funcitons.Functions;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.util.StringConverter;
@@ -33,7 +33,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import model.InvalidIbanException;
 
 /**
@@ -43,7 +42,7 @@ import model.InvalidIbanException;
 public class NewMovimentoController implements Initializable
 {
     @FXML
-    private ChoiceBox typeCB;
+    private ChoiceBox<TipoMovimento> typeCB;
     
     @FXML
     private DatePicker execDate;
@@ -99,29 +98,23 @@ public class NewMovimentoController implements Initializable
             {
                 final Map<String, JsonElement> type = e.getAsJsonObject().asMap();
                 
-                final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), type.get("direction").getAsBoolean() ? 1 : -1, type.get("min_power_required_id").getAsInt());
+                final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), type.get("direction").getAsBoolean() ? 1 : -1, type.get("days").getAsInt(), type.get("min_power_required_id").getAsInt());
                 
-                if (this.user.getPower().getPowerCode() >= t.getMin_power_requried() )
+                if (this.user.getPower().getPowerCode() >= t.getMin_power_requried())
                     this.tipiMovimento.add(t);
             } 
         } 
         catch (final IOException | IllegalStateException ex) 
         {
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "Errore durante la richiesta dei dati!");
-            alert.setHeaderText("Errore richiesta dati");
-            alert.setTitle("Errore");
-            alert.showAndWait();
-            Platform.runLater(((Stage) this.amount.getScene().getWindow())::close);
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Errore durante la richiesta dei dati!", "Errore richiesta dati", "Errore!");
+            Platform.runLater(this.amount.getScene().getWindow()::hide);
             return;
         }
         
         if (this.tipiMovimento.isEmpty())
         {
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "Nessun movimento presente per le tue autorizzazioni!");
-            alert.setHeaderText("Errore creazione Movimento");
-            alert.setTitle("Errore");
-            alert.showAndWait();
-            Platform.runLater(((Stage) this.amount.getScene().getWindow())::close);
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Nessun movimento presente per le tue autorizzazioni!", "Errore creazione Movimento", "Errore!");
+            Platform.runLater(this.amount.getScene().getWindow()::hide);
             return;
         }
         
@@ -147,12 +140,17 @@ public class NewMovimentoController implements Initializable
         
         this.typeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
         {
-            final TipoMovimento tipo = (TipoMovimento) this.typeCB.getValue();
+            final TipoMovimento tipo =  this.typeCB.getValue();
             this.operationCostTF.setText("€" + String.valueOf(tipo.getCost()));
             
             this.iban.setVisible(tipo.getAmount() != 1);
             this.iban_LBL.setVisible(tipo.getAmount() != 1);
             
+        });
+        
+        this.execDate.valueProperty().addListener(eh -> 
+        {
+            this.emitDate.setValue(this.execDate.getValue().plusDays(this.typeCB.getValue().getGiorniValuta()));
         });
         
         this.typeCB.setValue(this.typeCB.getItems().get(0));
@@ -162,7 +160,12 @@ public class NewMovimentoController implements Initializable
     {
         try
         {
-            final TipoMovimento tipo = (TipoMovimento) this.typeCB.getValue();
+            final TipoMovimento tipo = this.typeCB.getValue();
+            if (!this.execDate.getValue().isAfter(LocalDate.now().minusDays(1)))
+            {
+                Functions.spawnAlert(Alert.AlertType.ERROR, "Impossibile mettere una data precedente a quella odierna", "Errore data", "Errore!");
+                return;
+            }
             final Movimento m = new Movimento(this.conto.getIban(), this.execDate.getValue(), this.emitDate.getValue(), this.causal.getText(), tipo.getAmount() == 1 ? this.conto.getIban() : new Iban(this.iban.getText()), Double.parseDouble(this.amount.getText()), tipo);
             final JsonObject data = new JsonObject();
             
@@ -189,29 +192,21 @@ public class NewMovimentoController implements Initializable
         }
         catch (final IOException | IllegalStateException ex)
         {
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "Errore nella richiesta del movimento!");
-            alert.setTitle("Errore!");
-            alert.showAndWait();
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Errore nella richiesta del movimento!", "Errore richiesta", "Errore!");
         }
         catch (final NumberFormatException ex)
         {
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "Inserire solo valori numerici nell'importo!");
-            alert.setTitle("Errore!");
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Inserire solo valori numerici nell'importo!", "Errore valori", "Errore!");
             this.amount.setText("");
-            alert.showAndWait();
         }
         catch (final InvalidIbanException ex)
         {
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "Iban inserito non valido!");
-            alert.setTitle("Errore!");
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Iban inserito non valido!", "Errore iban", "Errore!");
             this.iban.setText("");
-            alert.showAndWait();
         } 
         catch (IllegalArgumentException | IllegalAccessException ex) 
         {
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "Errore nel caricamento dei dati!");
-            alert.setTitle("Errore!");
-            alert.showAndWait();
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Errore nel caricamento dei dati!", "Errore caricamento dati", "Errore!");
             Platform.runLater(this.amount.getScene().getWindow()::hide);
         }
         

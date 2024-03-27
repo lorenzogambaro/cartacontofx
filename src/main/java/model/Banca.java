@@ -58,9 +58,9 @@ public class Banca implements Comparable<Banca>, Serializable
     {
         this(name, location, abi, cab, new HashMap<>(), new HashMap<>(), new HashMap<>());
     }
-    public TipoMovimento newTipoMovimento(final String desc, final double cost, final double amount, final int min_power_id)
+    public TipoMovimento newTipoMovimento(final String desc, final double cost, final double amount, final int giorniValuta, final int min_power_id)
     {
-        final TipoMovimento newMovimento = new TipoMovimento(desc, cost, amount, min_power_id);
+        final TipoMovimento newMovimento = new TipoMovimento(desc, cost, amount, giorniValuta, min_power_id);
         
         if (!this.tipiMovimento.containsKey(desc))
         {

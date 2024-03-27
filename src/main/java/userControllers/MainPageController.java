@@ -15,12 +15,11 @@ import com.google.gson.JsonElement;
 import API.ApiConnection;
 import com.conto.cartacontogui.App;
 import com.google.gson.JsonObject;
+import funcitons.Functions;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +84,7 @@ public class MainPageController implements Initializable
         {
             this.contiSelector.getItems().clear();
             this.contiSelector.getItems().addAll(this.conti.keySet());
-
+            
             this.contiSelector.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
             {
                 if (newValue == null)
@@ -103,7 +102,13 @@ public class MainPageController implements Initializable
         try 
         {
             this.conti.clear();
-            this.conti.putAll(retriveDatas(this.intestatario.get()));
+            final Map<Iban, ContoProperty> retriveDatas = retriveDatas(this.intestatario.get());
+            
+            if (retriveDatas.isEmpty())
+                this.contiSelector.setValue("Nessun conto presente");
+            else
+                this.conti.putAll(retriveDatas);
+            
             this.user_LBL.setText("Dashboard banca di: " + this.intestatario.get().getSurname() + " " + this.intestatario.get().getName());
         }
         catch (final IOException | IllegalStateException ex) 
@@ -112,7 +117,7 @@ public class MainPageController implements Initializable
             alert.setHeaderText("Errore richiesta dati");
             alert.setTitle("Errore");
             alert.showAndWait();
-            Platform.runLater(((Stage) this.saldoLBL.getScene().getWindow())::close);
+            Platform.runLater(this.saldoLBL.getScene().getWindow()::hide);
         }
         
         this.movimentiEntrata.setCellValueFactory(param -> 
@@ -155,7 +160,7 @@ public class MainPageController implements Initializable
                 final Map<String, JsonElement> mov = e.getAsJsonObject().asMap();
                 final Map<String, JsonElement> type = mov.get("movement_type").getAsJsonObject().asMap();
 
-                final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), -1, type.get("min_power_required_id").getAsInt());
+                final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), -1, type.get("days").getAsInt(), type.get("min_power_required_id").getAsInt());
 
                 c.newOperazioneOut
                 (       t,
@@ -171,7 +176,7 @@ public class MainPageController implements Initializable
                 final Map<String, JsonElement> mov = e.getAsJsonObject().asMap();
                 final Map<String, JsonElement> type = mov.get("movement_type").getAsJsonObject().asMap();
 
-                final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), 1, type.get("min_power_required_id").getAsInt());
+                final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), 1, type.get("days").getAsInt(), type.get("min_power_required_id").getAsInt());
 
                 c.newOperazioneIn
                 (       t,
@@ -190,6 +195,11 @@ public class MainPageController implements Initializable
     @FXML
     public void onNewMovimentoClick(ActionEvent eh) throws IOException
     {
+        if (this.conti.isEmpty())
+        {
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Nessun conto presente!", "Nessun conto!", "Errore conto!");
+            return;
+        }
         final Stage s = new Stage();
 
         final FXMLLoader loader = new FXMLLoader(App.class.getResource("userFXML/newmovimento.fxml"));

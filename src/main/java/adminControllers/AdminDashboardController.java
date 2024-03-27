@@ -66,7 +66,7 @@ public class AdminDashboardController implements Initializable
     @FXML
     private void onAddIntestatario(final ActionEvent event) throws IOException 
     {
-        if (this.admin.getPowerLevel() <= ADD_POWER)
+        if (this.admin.getPowerLevel() < ADD_POWER || this.admin.getPowerLevel() == 0)
         {
             final Alert alert = new Alert(Alert.AlertType.ERROR, "Permessi insufficienti per seguire l'azione!");
             alert.setHeaderText("Errore di accesso!");
@@ -82,7 +82,7 @@ public class AdminDashboardController implements Initializable
     @FXML
     private void addNewConto(final ActionEvent event) throws IOException 
     {
-        if (this.admin.getPowerLevel() <= ADD_POWER)
+        if (this.admin.getPowerLevel() < ADD_POWER || this.admin.getPowerLevel() == 0)
         {
             final Alert alert = new Alert(Alert.AlertType.ERROR, "Permessi insufficienti per seguire l'azione!");
             alert.setHeaderText("Errore di accesso!");

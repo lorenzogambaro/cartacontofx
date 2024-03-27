@@ -58,11 +58,11 @@ public class NewIntestatarioController implements Initializable {
     @FXML
     private TextField address_TF;
     @FXML
-    private PasswordField password_TF;
-    @FXML
     private ChoiceBox<TipoIntestatario> powers_CB;
     @FXML
     private TextField numeroCivico_TF;
+    @FXML
+    private PasswordField password_PF;
 
 
     @Override
@@ -153,7 +153,7 @@ public class NewIntestatarioController implements Initializable {
             final Intestatario i = new Intestatario
             (
                     this.username_TF.getText(), 
-                    User.calcolaHash(this.password_TF.getText()), 
+                    Intestatario.calcolaHash(this.password_PF.getText()), 
                     this.powers_CB.getValue(), 
                     this.fiscal_code_TF.getText(), 
                     this.surname_TF.getText(), 
