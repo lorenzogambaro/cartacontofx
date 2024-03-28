@@ -9,9 +9,9 @@ import com.conto.cartacontogui.App;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import funcitons.Functions;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -53,6 +53,8 @@ public class NuovoContoController implements Initializable {
             
             if (ibanObject.isJsonNull() || intestatariObject.isJsonNull())
             {
+                Functions.spawnAlert(Alert.AlertType.ERROR, "Impossibile richiedere completamente i dati al server!", "Errore richiesta al server!", "Errore");
+                Platform.runLater(iban_TF.getScene().getWindow()::hide);
                 return;
             }
             
