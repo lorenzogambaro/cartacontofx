@@ -7,8 +7,11 @@ package adminControllers;
 import API.ApiConnection;
 import com.conto.cartacontogui.App;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import funcitons.Functions;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,6 +25,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import model.Administrator;
+import model.TipoAmministratore;
+import model.TipoUtente;
 
 /**
  *
@@ -30,7 +35,6 @@ import model.Administrator;
 public class AdminDashboardController implements Initializable
 {
     private Administrator admin;
-    public final static int ADD_POWER = 3; //to implement in DB
     
     @FXML
     private Button addIntestatario;
@@ -39,17 +43,43 @@ public class AdminDashboardController implements Initializable
     {
         this.admin = Objects.requireNonNull(a);
     }
+    
+    private List<TipoUtente> powers;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) 
     {
         if (this.admin == null)
             return;
+        try 
+        {
+            final List<JsonElement> powersElement = ApiConnection.getDatas("http://server632.ddns.net:8211/cartaconto/potenzeamministratori").asMap().get("result").getAsJsonArray().asList();
+            if (powersElement.isEmpty()) 
+            {
+                Functions.spawnAlert(Alert.AlertType.ERROR, "Nessuna operazione eseguibile!", "Errore operazioni", "Error");
+                Platform.runLater(addIntestatario.getScene().getWindow()::hide);
+                return;
+            }
+            
+            this.powers = new ArrayList<>();
+            for (final JsonElement j : powersElement) 
+            {
+                final JsonObject obj = j.getAsJsonObject();
+                final TipoUtente t = new TipoAmministratore(obj.get("id_power").getAsInt(), obj.get("powerDesc").getAsString());
+                
+                this.powers.add(t);
+            }
+        } 
+        catch (final IOException ex) 
+        {
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Impossibile contattare il server, riprova più tardi!", "Errore connessione al server!", "Error");
+            Platform.runLater(addIntestatario.getScene().getWindow()::hide);
+            return;
+        }
         
         try 
         {
             final Map<String, JsonElement> response = ApiConnection.getDatas("http://server632.ddns.net:8211/cartaconto/conti").asMap();
-            
             final List<JsonElement> conti = response.get("result").getAsJsonArray().asList();
 
         } 
@@ -66,7 +96,7 @@ public class AdminDashboardController implements Initializable
     @FXML
     private void onAddIntestatario(final ActionEvent event) throws IOException 
     {
-        if (this.admin.getPowerLevel() < ADD_POWER || this.admin.getPowerLevel() == 0)
+        if (this.admin.getPowerLevel() != 0 && this.admin.getPowerLevel() < this.powers.get(3).getPowerCode())
         {
             final Alert alert = new Alert(Alert.AlertType.ERROR, "Permessi insufficienti per seguire l'azione!");
             alert.setHeaderText("Errore di accesso!");
@@ -82,7 +112,7 @@ public class AdminDashboardController implements Initializable
     @FXML
     private void addNewConto(final ActionEvent event) throws IOException 
     {
-        if (this.admin.getPowerLevel() < ADD_POWER || this.admin.getPowerLevel() == 0)
+        if (this.admin.getPowerLevel() != 0 && this.admin.getPowerLevel() < this.powers.get(3).getPowerCode())
         {
             final Alert alert = new Alert(Alert.AlertType.ERROR, "Permessi insufficienti per seguire l'azione!");
             alert.setHeaderText("Errore di accesso!");

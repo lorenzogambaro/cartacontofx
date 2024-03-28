@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.TipoIntestatario;
+import model.TipoUtente;
 
 /**
  *
@@ -73,12 +76,39 @@ public class MainPageController implements Initializable
     {
         this.intestatario.set(Objects.requireNonNull(i));
     }
-    
+        
+    private List<TipoUtente> powers;
     @Override
     public void initialize(URL location, ResourceBundle resources) 
     {
         if (this.intestatario.get() == null)
             return;
+        
+        try 
+        {
+            final List<JsonElement> powersElement = ApiConnection.getDatas("http://server632.ddns.net:8211/cartaconto/potenzeintestatario").asMap().get("result").getAsJsonArray().asList();
+            if (powersElement.isEmpty()) 
+            {
+                Functions.spawnAlert(Alert.AlertType.ERROR, "Nessuna operazione eseguibile!", "Errore operazioni", "Error");
+                Platform.runLater(saldoLBL.getScene().getWindow()::hide);
+                return;
+            }
+            
+            this.powers = new ArrayList<>();
+            for (final JsonElement j : powersElement) 
+            {
+                final JsonObject obj = j.getAsJsonObject();
+                final TipoUtente t = new TipoIntestatario(obj.get("id_potenza").getAsInt(), obj.get("descPerms").getAsString());
+                
+                this.powers.add(t);
+            }
+        } 
+        catch (final IOException ex) 
+        {
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Impossibile contattare il server, riprova più tardi!", "Errore connessione al server!", "Error");
+            Platform.runLater(saldoLBL.getScene().getWindow()::hide);
+            return;
+        }
                 
         this.conti.addListener((final Observable change) ->
         {
@@ -195,6 +225,11 @@ public class MainPageController implements Initializable
     @FXML
     public void onNewMovimentoClick(ActionEvent eh) throws IOException
     {
+        if (this.intestatario.get().getPower().getPowerCode() != 0 && this.intestatario.get().getPower().getPowerCode() < this.powers.get(2).getPowerCode())
+        {
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Impossibile eseguire l'operazione!", "Permessi insufficienti!", "Errore Operazione!");
+            return;
+        }
         if (this.conti.isEmpty())
         {
             Functions.spawnAlert(Alert.AlertType.ERROR, "Nessun conto presente!", "Nessun conto!", "Errore conto!");
@@ -223,6 +258,11 @@ public class MainPageController implements Initializable
     @FXML
     private void onModifyDatas(final ActionEvent event) throws IOException 
     {
+        if (this.intestatario.get().getPower().getPowerCode() != 0 && this.intestatario.get().getPower().getPowerCode() < this.powers.get(1).getPowerCode())
+        {
+            Functions.spawnAlert(Alert.AlertType.ERROR, "Impossibile eseguire l'operazione!", "Permessi insufficienti!", "Errore Operazione!");
+            return;
+        }
         final Stage s = new Stage();
         final FXMLLoader loader = new FXMLLoader(App.class.getResource("userFXML/modificaIntestatario.fxml"));
         s.setScene(new Scene(loader.load()));

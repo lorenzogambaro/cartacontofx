@@ -403,6 +403,34 @@ app.post('/cartaconto/conti', async (req, res) =>
     }
     
 })
+app.get('/cartaconto/potenzeamministratori', async (req, res) => 
+{
+    try
+    {
+        const [result] = await pool.query(`SELECT * FROM adminpowers`)
+        
+        res.send({ status: 200, result : result })
+    }
+    catch (exception)
+    {
+        res.send({ status: 400 })
+    }
+
+})
+app.get('/cartaconto/potenzeamministratori/:id', async (req, res) => 
+{
+    try
+    {
+        const [result] = await pool.query(`SELECT * FROM adminpowers WHERE id_power = ? LIMIT 1`, req.params.id)
+        
+        res.send({ status: 200, result : result[0]})
+    }
+    catch (exception)
+    {
+        res.send({ status: 400 })
+    }
+
+})
 
 
 app.listen(8211, () => console.log("Listening to port 8211"))

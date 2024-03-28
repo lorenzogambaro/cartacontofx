@@ -100,7 +100,7 @@ public class NewMovimentoController implements Initializable
                 
                 final TipoMovimento t = new TipoMovimento(type.get("id_type").getAsLong(), type.get("descript").getAsString(), type.get("cost").getAsDouble(), type.get("direction").getAsBoolean() ? 1 : -1, type.get("days").getAsInt(), type.get("min_power_required_id").getAsInt());
                 
-                if (this.user.getPower().getPowerCode() >= t.getMin_power_requried())
+                if (this.user.getPower().getPowerCode() == 0 || this.user.getPower().getPowerCode() >= t.getMin_power_requried())
                     this.tipiMovimento.add(t);
             } 
         } 
