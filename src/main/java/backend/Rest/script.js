@@ -179,6 +179,22 @@ app.get('/cartaconto/conti/:iban', async (req, res) =>
             usernames.push(val[0].username)
         }
 
+        const [movimenti_cui_richiedente] = await pool.query('SELECT * FROM movimenti WHERE iban_richiedente = ?', req.params.iban)
+
+        for (let i = 0; i < movimenti_cui_richiedente.length; i++)
+        {
+            const movement = movimenti_cui_richiedente[i]
+
+            if (movement.iban_richiedente === movement.iban_destinatario)
+                movimenti_cui_richiedente.splice(i, 1)
+            else
+            {
+                const [type_movement] = (await pool.query('SELECT * FROM tipimovimento WHERE id_type = ? LIMIT 1', movement.movement_type))[0]
+                type_movement.direction = type_movement.direction.readInt8() !== 0
+                movement.movement_type = type_movement
+            }
+        }
+
         const [movimenti_cui_destinatario] = await pool.query('SELECT * FROM movimenti WHERE iban_destinatario = ?', req.params.iban)
 
         
@@ -189,15 +205,6 @@ app.get('/cartaconto/conti/:iban', async (req, res) =>
             movement.movement_type = type_movement
         }
         
-        const [movimenti_cui_richiedente] = await pool.query('SELECT * FROM movimenti WHERE iban_richiedente = ?', req.params.iban)
-
-
-        for (const movement of movimenti_cui_richiedente)
-        {
-            const [type_movement] = (await pool.query('SELECT * FROM tipimovimento WHERE id_type = ? LIMIT 1', movement.movement_type))[0]
-            type_movement.direction = type_movement.direction.readInt8() !== 0
-            movement.movement_type = type_movement
-        }
 
         response.intestatari_usernames = usernames
         response.movimenti_cui_destinatario = movimenti_cui_destinatario

@@ -93,7 +93,7 @@ public class LoginController
                     
             s.setScene(sc);
             s.setTitle("Internet Banking di " + user.get("username").getAsString());
-            s.setOnCloseRequest(eh -> ((Stage) App.scene.getWindow()).show());
+            s.setOnHiding(eh -> ((Stage) App.scene.getWindow()).show());
             s.show();
             username_TF.getScene().getWindow().hide();
         }

@@ -51,7 +51,7 @@ public class Conto implements Comparable<Conto>, Extinguishable, Serializable
     {
         double sum = 0;
         for (final Movimento temp : this.movimenti.values())
-            sum += (temp.getImporto() * temp.getType().getAmount()) - temp.getType().getCost();
+            sum += temp.getType().getAmount() > 0 ? temp.getImporto() : -temp.getImporto() - temp.getType().getCost();
         
         return Double.parseDouble(new DecimalFormat("#.0").format(sum));
     }

@@ -79,7 +79,7 @@ public class MainPageController implements Initializable
         
     private List<TipoUtente> powers;
     @Override
-    public void initialize(URL location, ResourceBundle resources) 
+    public void initialize(URL location, ResourceBundle resources)
     {
         if (this.intestatario.get() == null)
             return;
@@ -147,7 +147,8 @@ public class MainPageController implements Initializable
             alert.setHeaderText("Errore richiesta dati");
             alert.setTitle("Errore");
             alert.showAndWait();
-            Platform.runLater(this.saldoLBL.getScene().getWindow()::hide);
+//            Platform.runLater(this.saldoLBL.getScene().getWindow()::hide);
+            return;
         }
         
         this.movimentiEntrata.setCellValueFactory(param -> 
