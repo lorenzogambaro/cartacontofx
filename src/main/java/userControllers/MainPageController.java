@@ -147,7 +147,7 @@ public class MainPageController implements Initializable
             alert.setHeaderText("Errore richiesta dati");
             alert.setTitle("Errore");
             alert.showAndWait();
-//            Platform.runLater(this.saldoLBL.getScene().getWindow()::hide);
+            Platform.runLater(this.saldoLBL.getScene().getWindow()::hide);
             return;
         }
         
